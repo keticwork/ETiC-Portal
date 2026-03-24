@@ -4,241 +4,437 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>docProtect — ETiC Portal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #03020d;
-      --teal: #1D9E75;
-      --teal-dark: #0F6E56;
-      --white: #f0eeff;
-    }
-
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-    }
-
-    /* Stars */
-    #stars {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .star {
-      position: absolute;
-      border-radius: 50%;
-      background: #fff;
-      animation: twinkle var(--dur, 3s) ease-in-out var(--del, 0s) infinite;
-    }
-
-    /* Header */
-    .site-header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.2rem 2rem;
-      background: linear-gradient(to bottom, rgba(3,2,13,0.95) 0%, transparent 100%);
-    }
-
-    .logo { display: flex; flex-direction: column; gap: 0.15rem; line-height: 1; }
-
-    .logo-name {
-      font-family: 'Cinzel', serif;
-      font-size: 1.6rem;
-      font-weight: 900;
-      letter-spacing: 0.5em;
-      text-transform: uppercase;
-    }
-
-    .logo-sub {
-      font-size: 0.55rem;
-      font-weight: 300;
-      letter-spacing: 0.55em;
-      color: rgba(240,238,255,0.5);
-    }
-
-    /* Page */
-    .page {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 7rem 1.5rem 4rem;
-      gap: 2rem;
-    }
-
-    /* Mini trou noir */
-    .mini-portal {
-      position: relative;
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      animation: floatY 5s ease-in-out infinite;
-    }
-
-    .mini-portal .ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 2px solid transparent;
-    }
-
-    .mini-portal .ring--outer {
-      inset: -14px;
-      border-top-color: var(--teal);
-      border-right-color: var(--teal);
-      animation: spinCW 8s linear infinite;
-    }
-
-    .mini-portal .ring--mid {
-      inset: -6px;
-      border-bottom-color: var(--teal-dark);
-      border-left-color: var(--teal-dark);
-      animation: spinCCW 6s linear infinite;
-    }
-
-    .mini-portal .core {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: radial-gradient(circle, #0d3d2e 0%, #071f18 40%, #000 100%);
-      box-shadow:
-        0 0 25px rgba(29,158,117,0.5),
-        0 0 50px rgba(29,158,117,0.2),
-        inset 0 0 15px rgba(0,0,0,0.8);
-      animation: pulseGlowTeal 3s ease-in-out infinite;
-    }
-
-    /* Titre */
-    .page-title {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(2rem, 8vw, 4rem);
-      font-weight: 700;
-      color: var(--teal);
-      letter-spacing: 0.08em;
-      text-shadow: 0 0 30px rgba(29,158,117,0.4);
-    }
-
-    .page-subtitle {
-      font-size: clamp(0.75rem, 2vw, 0.95rem);
-      font-weight: 300;
-      letter-spacing: 0.25em;
-      color: rgba(240,238,255,0.4);
-      text-transform: uppercase;
-    }
-
-    /* Bouton retour */
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-top: 1rem;
-      padding: 0.75rem 1.8rem;
-      border: 1px solid rgba(29,158,117,0.35);
-      border-radius: 999px;
-      color: var(--teal);
-      text-decoration: none;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      transition: background 0.3s, border-color 0.3s, color 0.3s;
-    }
-
-    .back-btn:hover {
-      background: rgba(29,158,117,0.1);
-      border-color: var(--teal);
-      color: #fff;
-    }
-
-    /* Keyframes */
-    @keyframes spinCW  { from { transform: rotate(0deg);    } to { transform: rotate(360deg);  } }
-    @keyframes spinCCW { from { transform: rotate(0deg);    } to { transform: rotate(-360deg); } }
-    @keyframes floatY  {
-      0%, 100% { transform: translateY(0);     }
-      50%      { transform: translateY(-8px);  }
-    }
-    @keyframes twinkle {
-      0%, 100% { opacity: var(--omin, 0.2); }
-      50%      { opacity: var(--omax, 1);   }
-    }
-    @keyframes pulseGlowTeal {
-      0%, 100% {
-        box-shadow:
-          0 0 20px rgba(29,158,117,0.4),
-          0 0 40px rgba(29,158,117,0.15),
-          inset 0 0 15px rgba(0,0,0,0.8);
-      }
-      50% {
-        box-shadow:
-          0 0 40px rgba(29,158,117,0.7),
-          0 0 80px rgba(29,158,117,0.3),
-          inset 0 0 15px rgba(0,0,0,0.8);
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <div id="stars"></div>
-
   <header class="site-header">
+    <a class="back-link" href="../index.html">&#8592; ETiC Portal</a>
     <div class="logo">
-      <span class="logo-name">ETiC</span>
-      <span class="logo-sub">P O R T A L</span>
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      <span class="logo-text">docProtect</span>
     </div>
+    <div class="header-spacer"></div>
   </header>
 
-  <main class="page">
-    <div class="mini-portal">
-      <div class="ring ring--outer"></div>
-      <div class="ring ring--mid"></div>
-      <div class="core"></div>
-    </div>
+  <main class="app-main">
 
-    <h1 class="page-title">docProtect</h1>
-    <p class="page-subtitle">Projet en cours de développement</p>
+    <!-- Section 1 : Upload -->
+    <section class="card upload-section">
+      <h2 class="section-label">1 — Documents</h2>
+      <div class="drop-zone" id="dropZone" role="region" aria-label="Zone de dépôt de fichiers">
+        <div class="drop-zone__inner">
+          <svg class="drop-zone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <p class="drop-zone__text">Glissez vos documents ici</p>
+          <p class="drop-zone__hint">JPG &middot; PNG &middot; PDF &mdash; plusieurs fichiers acceptés</p>
+          <button type="button" class="btn btn--outline" id="browseBtn">Parcourir</button>
+          <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.pdf" multiple />
+        </div>
+      </div>
+      <div class="file-list" id="fileList"></div>
+    </section>
 
-    <a class="back-btn" href="../index.html">&#8592; Retour au Portal</a>
+    <!-- Section 2 : Formulaire filigrane -->
+    <section class="card form-section">
+      <h2 class="section-label">2 — Filigrane</h2>
+      <form id="watermarkForm" novalidate>
+        <div class="form-row">
+          <label class="form-label" for="destinataire">
+            Destinataire <span class="required">*</span>
+          </label>
+          <input
+            class="form-input"
+            type="text"
+            id="destinataire"
+            name="destinataire"
+            placeholder="ex : CAF du Var"
+            autocomplete="off"
+            required
+          />
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="objet">Objet</label>
+          <input
+            class="form-input"
+            type="text"
+            id="objet"
+            name="objet"
+            placeholder="ex : Dossier location"
+            autocomplete="off"
+          />
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="dateField">Date</label>
+          <input
+            class="form-input"
+            type="date"
+            id="dateField"
+            name="date"
+          />
+        </div>
+        <div class="preview-box">
+          <span class="preview-label">Aperçu :</span>
+          <span class="preview-text" id="watermarkPreview">[DESTINATAIRE] — [DATE]</span>
+        </div>
+        <button class="btn btn--primary btn--full" type="submit" id="applyBtn" disabled>
+          <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+          </svg>
+          Appliquer la protection
+        </button>
+      </form>
+    </section>
+
+    <!-- Section 3 : Résultats -->
+    <section class="card results-section" id="resultsSection" hidden>
+      <div class="results-header">
+        <h2 class="section-label" style="margin-bottom:0">3 — Résultats</h2>
+        <button class="btn btn--primary" id="downloadAllBtn" type="button" disabled>
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+          Tout télécharger en PDF
+        </button>
+      </div>
+      <div class="results-grid" id="resultsGrid"></div>
+    </section>
+
   </main>
 
+  <!-- CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <!-- App modules -->
+  <script src="js/steganography.js"></script>
+  <script src="js/watermark.js"></script>
+  <script src="js/pdfExport.js"></script>
+
   <script>
+    /* ============================================================
+       docProtect — app.js (inline)
+       ============================================================ */
+
+    // Configure pdf.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    /* ---- State ---- */
+    const state = {
+      files: [],   // { id, file, thumbURL, processedBlob, processedType, status }
+      nextId: 0,
+    };
+
+    /* ---- DOM refs ---- */
+    const dropZone       = document.getElementById('dropZone');
+    const browseBtn      = document.getElementById('browseBtn');
+    const fileInput      = document.getElementById('fileInput');
+    const fileList       = document.getElementById('fileList');
+    const applyBtn       = document.getElementById('applyBtn');
+    const watermarkForm  = document.getElementById('watermarkForm');
+    const resultsSection = document.getElementById('resultsSection');
+    const resultsGrid    = document.getElementById('resultsGrid');
+    const downloadAllBtn = document.getElementById('downloadAllBtn');
+    const previewEl      = document.getElementById('watermarkPreview');
+
+    /* ---- Set today's date ---- */
     (function () {
-      const container = document.getElementById('stars');
-      const frag = document.createDocumentFragment();
-      for (let i = 0; i < 120; i++) {
-        const s = document.createElement('div');
-        s.className = 'star';
-        const size = (Math.random() * 2 + 0.5).toFixed(2);
-        s.style.cssText = `
-          width:${size}px; height:${size}px;
-          left:${Math.random()*100}%;
-          top:${Math.random()*100}%;
-          --omin:${(Math.random()*0.3+0.1).toFixed(2)};
-          --omax:${(Math.random()*0.5+0.5).toFixed(2)};
-          --dur:${(Math.random()*4+2).toFixed(2)}s;
-          --del:${(Math.random()*5).toFixed(2)}s;
-        `;
-        frag.appendChild(s);
+      const now  = new Date();
+      const yyyy = now.getFullYear();
+      const mm   = String(now.getMonth() + 1).padStart(2, '0');
+      const dd   = String(now.getDate()).padStart(2, '0');
+      document.getElementById('dateField').value = `${yyyy}-${mm}-${dd}`;
+      refreshPreview();
+    }());
+
+    /* ---- Live preview ---- */
+    ['destinataire', 'objet', 'dateField'].forEach(function (id) {
+      document.getElementById(id).addEventListener('input', refreshPreview);
+    });
+
+    function getConfig() {
+      return {
+        destinataire: document.getElementById('destinataire').value.trim(),
+        objet:        document.getElementById('objet').value.trim(),
+        date:         document.getElementById('dateField').value,
+      };
+    }
+
+    function refreshPreview() {
+      var c     = getConfig();
+      var parts = [c.destinataire || '[DESTINATAIRE]'];
+      if (c.objet) parts.push(c.objet);
+      parts.push(c.date ? toDisplayDate(c.date) : '[DATE]');
+      previewEl.textContent = parts.join(' \u2014 ');
+    }
+
+    function toDisplayDate(iso) {
+      var p = iso.split('-');
+      return p[2] + '/' + p[1] + '/' + p[0];
+    }
+
+    /* ---- Drag & Drop ---- */
+    dropZone.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', function (e) {
+      if (!dropZone.contains(e.relatedTarget)) {
+        dropZone.classList.remove('drag-over');
       }
-      container.appendChild(frag);
-    })();
+    });
+
+    dropZone.addEventListener('drop', function (e) {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      addFiles(Array.from(e.dataTransfer.files));
+    });
+
+    browseBtn.addEventListener('click', function () {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function () {
+      addFiles(Array.from(fileInput.files));
+      fileInput.value = '';
+    });
+
+    /* ---- File management ---- */
+    var VALID = { 'image/jpeg': true, 'image/png': true, 'application/pdf': true };
+
+    function addFiles(newFiles) {
+      newFiles.forEach(function (file) {
+        if (!VALID[file.type]) return;
+        var id = state.nextId++;
+        state.files.push({
+          id: id,
+          file: file,
+          thumbURL: null,
+          processedBlob: null,
+          processedType: null,
+          status: 'pending',
+        });
+        renderFileCard(id);
+        if (file.type !== 'application/pdf') makeThumbnail(id);
+      });
+      syncApplyBtn();
+    }
+
+    function renderFileCard(id) {
+      var entry = findEntry(id);
+      var card  = document.createElement('div');
+      card.className  = 'file-card';
+      card.dataset.id = id;
+
+      var thumbInner = entry.file.type === 'application/pdf'
+        ? pdfIconHTML(32)
+        : '<div class="thumb-shimmer"></div>';
+
+      card.innerHTML =
+        '<div class="file-card__thumb" id="fthumb-' + id + '">' + thumbInner + '</div>' +
+        '<div class="file-card__meta">' +
+          '<span class="file-card__name">' + esc(entry.file.name) + '</span>' +
+          '<span class="file-card__size">' + fmtSize(entry.file.size) + '</span>' +
+        '</div>' +
+        '<button class="file-card__del" type="button" aria-label="Retirer" data-del="' + id + '">\u2715</button>';
+
+      card.querySelector('[data-del]').addEventListener('click', function () {
+        removeFile(id);
+      });
+      fileList.appendChild(card);
+    }
+
+    function makeThumbnail(id) {
+      var entry = findEntry(id);
+      var url   = URL.createObjectURL(entry.file);
+      entry.thumbURL = url;
+      var el = document.getElementById('fthumb-' + id);
+      if (el) el.innerHTML = '<img src="' + url + '" alt="" class="thumb-img" />';
+    }
+
+    function removeFile(id) {
+      var idx = state.files.findIndex(function (f) { return f.id === id; });
+      if (idx === -1) return;
+      var entry = state.files[idx];
+      if (entry.thumbURL) URL.revokeObjectURL(entry.thumbURL);
+      state.files.splice(idx, 1);
+      var card = fileList.querySelector('[data-id="' + id + '"]');
+      if (card) card.remove();
+      syncApplyBtn();
+    }
+
+    function syncApplyBtn() {
+      applyBtn.disabled = state.files.length === 0;
+    }
+
+    /* ---- Apply watermark ---- */
+    watermarkForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      var config = getConfig();
+      if (!config.destinataire) {
+        document.getElementById('destinataire').focus();
+        return;
+      }
+
+      applyBtn.disabled = true;
+      applyBtn.innerHTML =
+        '<span class="spinner"></span> Traitement en cours\u2026';
+
+      resultsSection.hidden = false;
+      resultsGrid.innerHTML = '';
+      downloadAllBtn.disabled = true;
+
+      for (var i = 0; i < state.files.length; i++) {
+        var entry = state.files[i];
+        entry.status = 'processing';
+        addResultCard(entry.id);
+
+        try {
+          var blob = await applyWatermark(entry.file, config);
+          entry.processedBlob = blob;
+          entry.processedType = blob.type;
+          entry.status = 'done';
+          fillResultCard(entry.id, blob);
+        } catch (err) {
+          console.error('Erreur sur ' + entry.file.name, err);
+          entry.status = 'error';
+          errorResultCard(entry.id);
+        }
+      }
+
+      var doneCount = state.files.filter(function (f) { return f.status === 'done'; }).length;
+      downloadAllBtn.disabled = doneCount === 0;
+
+      applyBtn.disabled = false;
+      applyBtn.innerHTML =
+        '<svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">' +
+          '<path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>' +
+        '</svg> Appliquer la protection';
+    });
+
+    /* ---- Result cards ---- */
+    function addResultCard(id) {
+      var entry = findEntry(id);
+      var card  = document.createElement('div');
+      card.className  = 'result-card';
+      card.dataset.rid = id;
+      card.innerHTML =
+        '<div class="result-card__thumb" id="rthumb-' + id + '">' +
+          '<div class="result-processing"><div class="spinner-ring"></div><span>Traitement\u2026</span></div>' +
+        '</div>' +
+        '<div class="result-card__footer">' +
+          '<span class="result-card__name">' + esc(entry.file.name) + '</span>' +
+          '<span class="result-card__status" id="rstatus-' + id + '">En cours\u2026</span>' +
+        '</div>';
+      resultsGrid.appendChild(card);
+    }
+
+    function fillResultCard(id, blob) {
+      var entry     = findEntry(id);
+      var thumbEl   = document.getElementById('rthumb-' + id);
+      var statusEl  = document.getElementById('rstatus-' + id);
+      var card      = resultsGrid.querySelector('[data-rid="' + id + '"]');
+      var objectURL = URL.createObjectURL(blob);
+      var isImage   = blob.type.startsWith('image/');
+
+      if (thumbEl) {
+        thumbEl.innerHTML = isImage
+          ? '<img src="' + objectURL + '" alt="Document protégé" class="thumb-img" />'
+          : '<div class="pdf-preview">' + pdfIconHTML(44) + '<span class="pdf-preview__label">PDF protégé</span></div>';
+      }
+
+      if (statusEl) {
+        statusEl.textContent = '\u2713 Protégé';
+        statusEl.classList.add('status-ok');
+      }
+
+      if (card) {
+        var baseName = entry.file.name.replace(/\.[^.]+$/, '');
+        var ext      = isImage ? '.jpg' : '.pdf';
+        var link     = document.createElement('a');
+        link.className  = 'btn btn--outline btn--sm dl-btn';
+        link.href       = objectURL;
+        link.download   = baseName + '_protege' + ext;
+        link.innerHTML  =
+          '<svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13">' +
+            '<path d="M8 11.5l-4.5-4.5h3V2h3v5h3L8 11.5z"/>' +
+            '<rect x="2" y="13" width="12" height="1.5" rx="0.75"/>' +
+          '</svg> Télécharger';
+        card.querySelector('.result-card__footer').appendChild(link);
+      }
+    }
+
+    function errorResultCard(id) {
+      var thumbEl  = document.getElementById('rthumb-' + id);
+      var statusEl = document.getElementById('rstatus-' + id);
+      if (thumbEl)  thumbEl.innerHTML  = '<div class="result-error">\u26A0</div>';
+      if (statusEl) { statusEl.textContent = 'Erreur'; statusEl.classList.add('status-err'); }
+    }
+
+    /* ---- Download all ---- */
+    downloadAllBtn.addEventListener('click', async function () {
+      var config  = getConfig();
+      var items   = state.files
+        .filter(function (f) { return f.status === 'done' && f.processedBlob; })
+        .map(function (f) { return { blob: f.processedBlob, type: f.processedType }; });
+
+      if (!items.length) return;
+
+      downloadAllBtn.disabled = true;
+      downloadAllBtn.textContent = 'Génération\u2026';
+
+      try {
+        await exportAllAsPDF(items, config);
+      } catch (err) {
+        console.error('Export PDF failed', err);
+        downloadAllBtn.textContent = 'Erreur — réessayer';
+        downloadAllBtn.disabled = false;
+        return;
+      }
+
+      downloadAllBtn.disabled = false;
+      downloadAllBtn.innerHTML =
+        '<svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">' +
+          '<path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>' +
+        '</svg> Tout télécharger en PDF';
+    });
+
+    /* ---- Helpers ---- */
+    function findEntry(id) {
+      return state.files.find(function (f) { return f.id === id; });
+    }
+
+    function fmtSize(bytes) {
+      if (bytes < 1024)        return bytes + '\u202Fo';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + '\u202FKo';
+      return (bytes / (1024 * 1024)).toFixed(1) + '\u202FMo';
+    }
+
+    function esc(str) {
+      return str.replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function pdfIconHTML(size) {
+      var s = size || 36;
+      return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<rect x="6" y="2" width="36" height="44" rx="4" fill="#fff" stroke="#4a6fa5" stroke-width="2"/>' +
+        '<path d="M30 2v12h12" fill="none" stroke="#4a6fa5" stroke-width="2" stroke-linejoin="round"/>' +
+        '<rect x="6" y="30" width="36" height="16" rx="0 0 4 4" fill="#4a6fa5"/>' +
+        '<text x="24" y="42" text-anchor="middle" fill="#fff" font-size="9" font-weight="700" font-family="sans-serif">PDF</text>' +
+        '<line x1="12" y1="20" x2="36" y2="20" stroke="#c5d4f0" stroke-width="2" stroke-linecap="round"/>' +
+        '<line x1="12" y1="26" x2="28" y2="26" stroke="#c5d4f0" stroke-width="2" stroke-linecap="round"/>' +
+      '</svg>';
+    }
   </script>
 
 </body>
