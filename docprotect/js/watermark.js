@@ -126,32 +126,48 @@ async function _watermarkPDF(file, text) {
 }
 
 /* ============================================================
-   Core drawing — single diagonal watermark line
+   Core drawing — 3 diagonal watermark groups (25 / 50 / 75 %)
+   Each group : separator line — text — separator line
    ============================================================ */
 
 /**
- * Draws a single diagonal watermark centred on the canvas.
- * Passes from bottom-left to top-right (-30°).
+ * Draws 3 watermark groups at 25%, 50% and 75% of canvas height.
+ * Each group is rotated -30° and contains:
+ *   — a horizontal rule the width of the text
+ *   — the watermark text in bold 32px
+ *   — a horizontal rule the width of the text
+ * Vertical spacing between elements: 28px.
+ *
  * @param {CanvasRenderingContext2D} ctx
  * @param {number} width
  * @param {number} height
  * @param {string} text
  */
 function _drawWatermark(ctx, width, height, text) {
-  ctx.save();
+  ctx.font         = 'bold 32px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+  ctx.globalAlpha  = 0.25;
+  ctx.fillStyle    = '#8b0000';
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'middle';
 
-  ctx.font            = 'bold 28px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-  ctx.globalAlpha     = 0.25;
-  ctx.fillStyle       = '#8b0000';
-  ctx.textAlign       = 'center';
-  ctx.textBaseline    = 'middle';
+  var textW   = ctx.measureText(text).width;
+  var ruleH   = 2;   // épaisseur du trait horizontal (px)
+  var spacing = 28;  // espacement vertical entre les éléments
 
-  // Translate to canvas centre, rotate -30°, draw once
-  ctx.translate(width / 2, height / 2);
-  ctx.rotate(-Math.PI / 6);
-  ctx.fillText(text, 0, 0);
+  [0.25, 0.50, 0.75].forEach(function (frac) {
+    ctx.save();
+    ctx.translate(width / 2, height * frac);
+    ctx.rotate(-Math.PI / 6);   // -30°
 
-  ctx.restore();
+    // Ligne du dessus
+    ctx.fillRect(-textW / 2, -spacing - ruleH / 2, textW, ruleH);
+    // Texte centré
+    ctx.fillText(text, 0, 0);
+    // Ligne du dessous
+    ctx.fillRect(-textW / 2, spacing - ruleH / 2, textW, ruleH);
+
+    ctx.restore();
+  });
 }
 
 /* ---- Utility ---- */
