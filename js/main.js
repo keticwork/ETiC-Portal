@@ -5,20 +5,21 @@
 (function () {
   'use strict';
 
-  /* ---- Génération des étoiles ---- */
+  /* ---- Génération des étoiles (300, pleine hauteur de page) ---- */
   const starsContainer = document.getElementById('stars-container');
-  const STAR_COUNT = 150;
+  const STAR_COUNT = 300;
 
   function createStars() {
     const fragment = document.createDocumentFragment();
+    const totalHeight = Math.max(document.body.scrollHeight, window.innerHeight * 3);
 
     for (let i = 0; i < STAR_COUNT; i++) {
       const star = document.createElement('div');
       star.classList.add('star');
 
       const size = (Math.random() * 2 + 0.5).toFixed(2); // 0.5px–2.5px
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
+      const x = Math.random() * 100;                       // % largeur
+      const y = Math.random() * totalHeight;               // px hauteur totale
       const opacityMin = (Math.random() * 0.3 + 0.1).toFixed(2);
       const opacityMax = (Math.random() * 0.5 + 0.5).toFixed(2);
       const duration = (Math.random() * 4 + 2).toFixed(2); // 2s–6s
@@ -28,7 +29,7 @@
         width: ${size}px;
         height: ${size}px;
         left: ${x}%;
-        top: ${y}%;
+        top: ${y}px;
         --opacity-min: ${opacityMin};
         --opacity-max: ${opacityMax};
         --duration: ${duration}s;
@@ -115,6 +116,28 @@
   activePortals.forEach((portal) => {
     portal.addEventListener('mouseenter', () => spawnParticles(portal));
   });
+
+  /* ---- Étoiles filantes ---- */
+  function spawnShootingStar() {
+    const star = document.createElement('div');
+    star.className = 'shooting-star';
+
+    if (Math.random() < 0.6) {
+      star.style.top  = (Math.random() * 40) + 'vh';
+      star.style.left = (Math.random() * 50 + 40) + 'vw';
+    } else {
+      star.style.top  = (Math.random() * 50) + 'vh';
+      star.style.left = 'calc(100vw - 5px)';
+    }
+
+    document.body.appendChild(star);
+    star.addEventListener('animationend', () => star.remove());
+  }
+
+  setTimeout(() => {
+    spawnShootingStar();
+    setInterval(spawnShootingStar, 4000);
+  }, 2000);
 
   /* ---- Bouton son (toggle prêt, sans audio pour l'instant) ---- */
   const soundBtn = document.getElementById('soundToggle');

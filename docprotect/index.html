@@ -4,12 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>docProtect — ETiC Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
+  <!-- Fond étoilé spatial -->
+  <div id="stars-dp" aria-hidden="true"></div>
+
+  <!-- Bouclier en fond (French Republic) -->
+  <div class="shield-bg" aria-hidden="true">
+    <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 4 L96 24 L96 56 C96 82 76 102 50 116 C24 102 4 82 4 56 L4 24 Z"
+            fill="none" stroke="currentColor" stroke-width="2.5"/>
+      <path d="M50 14 L86 31 L86 57 C86 78 69 95 50 107 C31 95 14 78 14 57 L14 31 Z"
+            fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+      <line x1="50" y1="14" x2="50" y2="107" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+      <line x1="14" y1="57" x2="86" y2="57" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+    </svg>
+  </div>
+
   <header class="site-header">
-    <a class="back-link" href="../index.html">&#8592; ETiC Portal</a>
+    <a class="etic-logo-link" href="../index.html" aria-label="Retour à ETiC Portal">
+      <span class="etic-logo-name">ETiC</span>
+      <span class="etic-logo-sub">P O R T A L</span>
+    </a>
     <div class="logo">
       <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -110,6 +130,9 @@
   <!-- CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <!-- Space theme -->
+  <script src="js/main.js"></script>
 
   <!-- App modules -->
   <script src="js/steganography.js"></script>
