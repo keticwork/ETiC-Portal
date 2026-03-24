@@ -1,0 +1,411 @@
+/* ===================================
+   ETiC Portal — Space Hub Stylesheet
+   =================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap');
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #03020d;
+  --violet-light: #7F77DD;
+  --violet-dark: #534AB7;
+  --teal-light: #1D9E75;
+  --teal-dark: #0F6E56;
+  --grey: #5F5E5A;
+  --grey-dark: #3a3935;
+  --white: #f0eeff;
+  --portal-size-mobile: 140px;
+  --portal-size-desktop: 200px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* --- Étoiles --- */
+#stars-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  animation: twinkle var(--duration, 3s) ease-in-out var(--delay, 0s) infinite;
+}
+
+/* --- Header --- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 2rem;
+  background: linear-gradient(to bottom, rgba(3,2,13,0.95) 0%, transparent 100%);
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  gap: 0.15rem;
+}
+
+.logo-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.5em;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.logo-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.55em;
+  color: rgba(240, 238, 255, 0.5);
+  text-transform: uppercase;
+  padding-left: 0.1em;
+}
+
+.sound-btn {
+  background: none;
+  border: 1px solid rgba(240, 238, 255, 0.15);
+  color: rgba(240, 238, 255, 0.5);
+  font-size: 1rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s, color 0.3s;
+}
+
+.sound-btn:hover {
+  border-color: rgba(240, 238, 255, 0.4);
+  color: var(--white);
+}
+
+/* --- Main scroll --- */
+.portal-scroll {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Section portail --- */
+.portal-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 6rem 1rem 4rem;
+}
+
+.portal-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* --- Portail (trou noir) --- */
+.portal {
+  position: relative;
+  width: var(--portal-size-mobile);
+  height: var(--portal-size-mobile);
+  border-radius: 50%;
+  cursor: default;
+  animation: floatY 5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.portal-link {
+  display: block;
+  text-decoration: none;
+}
+
+.portal-link .portal {
+  cursor: pointer;
+  transition: filter 0.3s, transform 0.3s;
+}
+
+.portal-link:hover .portal {
+  filter: brightness(1.5);
+}
+
+.portal-link:hover .portal .portal__ring {
+  transform-origin: center;
+  transform: scale(1.05);
+}
+
+/* Anneaux */
+.portal__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.portal__ring--outer {
+  inset: -18px;
+  animation: spinCW 8s linear infinite;
+}
+
+.portal__ring--mid {
+  inset: -8px;
+  animation: spinCCW 6s linear infinite;
+}
+
+/* Core = trou noir central */
+.portal__core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+/* --- Violet (FlyerWallet) --- */
+.portal--violet .portal__core {
+  background: radial-gradient(circle, #2a2055 0%, #130e30 40%, #000 100%);
+  box-shadow:
+    0 0 30px rgba(127, 119, 221, 0.5),
+    0 0 60px rgba(127, 119, 221, 0.2),
+    inset 0 0 20px rgba(0, 0, 0, 0.8);
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.portal--violet .portal__ring--outer {
+  border-top-color: var(--violet-light);
+  border-right-color: var(--violet-light);
+}
+
+.portal--violet .portal__ring--mid {
+  border-bottom-color: var(--violet-dark);
+  border-left-color: var(--violet-dark);
+}
+
+/* --- Teal (docProtect) --- */
+.portal--teal .portal__core {
+  background: radial-gradient(circle, #0d3d2e 0%, #071f18 40%, #000 100%);
+  box-shadow:
+    0 0 30px rgba(29, 158, 117, 0.5),
+    0 0 60px rgba(29, 158, 117, 0.2),
+    inset 0 0 20px rgba(0, 0, 0, 0.8);
+  animation: pulseGlowTeal 3s ease-in-out infinite;
+}
+
+.portal--teal .portal__ring--outer {
+  border-top-color: var(--teal-light);
+  border-right-color: var(--teal-light);
+}
+
+.portal--teal .portal__ring--mid {
+  border-bottom-color: var(--teal-dark);
+  border-left-color: var(--teal-dark);
+}
+
+/* --- Futur (grisé, dashed) --- */
+.portal--future {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.portal--future .portal__core {
+  background: radial-gradient(circle, #2a2a28 0%, #111110 40%, #000 100%);
+  box-shadow: 0 0 20px rgba(95, 94, 90, 0.2);
+}
+
+.portal--future .portal__ring--outer {
+  border-style: dashed;
+  border-top-color: var(--grey);
+  border-right-color: var(--grey);
+}
+
+.portal--future .portal__ring--mid {
+  border-style: dashed;
+  border-bottom-color: var(--grey-dark);
+  border-left-color: var(--grey-dark);
+  animation-duration: 10s;
+}
+
+/* --- Texte portail --- */
+.portal-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  color: rgba(240, 238, 255, 0.7);
+  text-align: center;
+}
+
+.portal-name--dim {
+  color: rgba(240, 238, 255, 0.25);
+}
+
+/* --- Badges --- */
+.portal-badge {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.badge--online {
+  background: rgba(29, 200, 100, 0.12);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.badge--progress {
+  background: rgba(95, 94, 90, 0.12);
+  color: #9d9b96;
+  border: 1px solid rgba(95, 94, 90, 0.3);
+}
+
+.badge--soon {
+  background: rgba(50, 50, 48, 0.12);
+  color: #5f5e5a;
+  border: 1px solid rgba(50, 50, 48, 0.3);
+}
+
+/* --- Scroll indicator --- */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.35;
+}
+
+.scroll-arrow {
+  font-size: 1rem;
+  display: block;
+  animation: bounceDown 2s ease-in-out infinite;
+  color: var(--white);
+}
+
+/* --- Particules --- */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particleFly var(--fly-duration, 0.8s) ease-out forwards;
+}
+
+/* ===================================
+   Keyframes
+   =================================== */
+
+@keyframes spinCW {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spinCCW {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: var(--opacity-min, 0.2); }
+  50%       { opacity: var(--opacity-max, 1); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(127, 119, 221, 0.4),
+      0 0 40px rgba(127, 119, 221, 0.15),
+      inset 0 0 20px rgba(0, 0, 0, 0.8);
+  }
+  50% {
+    box-shadow:
+      0 0 45px rgba(127, 119, 221, 0.7),
+      0 0 90px rgba(127, 119, 221, 0.3),
+      inset 0 0 20px rgba(0, 0, 0, 0.8);
+  }
+}
+
+@keyframes pulseGlowTeal {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(29, 158, 117, 0.4),
+      0 0 40px rgba(29, 158, 117, 0.15),
+      inset 0 0 20px rgba(0, 0, 0, 0.8);
+  }
+  50% {
+    box-shadow:
+      0 0 45px rgba(29, 158, 117, 0.7),
+      0 0 90px rgba(29, 158, 117, 0.3),
+      inset 0 0 20px rgba(0, 0, 0, 0.8);
+  }
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); opacity: 0.35; }
+  50%       { transform: translateY(8px); opacity: 0.6; }
+}
+
+@keyframes particleFly {
+  0%   { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--tx, 40px), var(--ty, -40px)) scale(0.2); }
+}
+
+/* ===================================
+   Responsive Desktop
+   =================================== */
+@media (min-width: 768px) {
+  .portal {
+    width: var(--portal-size-desktop);
+    height: var(--portal-size-desktop);
+  }
+
+  .portal__ring--outer {
+    inset: -24px;
+  }
+
+  .portal__ring--mid {
+    inset: -12px;
+  }
+
+  .portal-name {
+    font-size: 0.85rem;
+  }
+
+  .logo-name {
+    font-size: 2rem;
+  }
+}

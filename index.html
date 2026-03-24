@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ETiC Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Header fixe -->
+  <header class="site-header">
+    <div class="logo">
+      <span class="logo-name">ETiC</span>
+      <span class="logo-sub">P O R T A L</span>
+    </div>
+    <button class="sound-btn" id="soundToggle" aria-label="Toggle sound">🔊</button>
+  </header>
+
+  <!-- Fond étoilé -->
+  <div id="stars-container"></div>
+
+  <!-- Contenu principal scrollable -->
+  <main class="portal-scroll">
+
+    <!-- Section 1 : FlyerWallet -->
+    <section class="portal-section" id="section-flyerwallet">
+      <div class="portal-wrapper">
+        <a class="portal-link" href="https://flyerwallet.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir FlyerWallet">
+          <div class="portal portal--violet" data-color="#7F77DD" id="portal-flyerwallet">
+            <div class="portal__ring portal__ring--outer"></div>
+            <div class="portal__ring portal__ring--mid"></div>
+            <div class="portal__core"></div>
+          </div>
+        </a>
+        <p class="portal-name">F L Y E R W A L L E T</p>
+        <span class="portal-badge badge--online">EN LIGNE</span>
+      </div>
+      <div class="scroll-indicator" aria-hidden="true">
+        <span class="scroll-arrow">&#8595;</span>
+      </div>
+    </section>
+
+    <!-- Section 2 : docProtect -->
+    <section class="portal-section" id="section-docprotect">
+      <div class="portal-wrapper">
+        <a class="portal-link" href="./docprotect/index.html" aria-label="Ouvrir docProtect">
+          <div class="portal portal--teal" data-color="#1D9E75" id="portal-docprotect">
+            <div class="portal__ring portal__ring--outer"></div>
+            <div class="portal__ring portal__ring--mid"></div>
+            <div class="portal__core"></div>
+          </div>
+        </a>
+        <p class="portal-name">D O C P R O T E C T</p>
+        <span class="portal-badge badge--progress">EN COURS</span>
+      </div>
+      <div class="scroll-indicator" aria-hidden="true">
+        <span class="scroll-arrow">&#8595;</span>
+      </div>
+    </section>
+
+    <!-- Section 3 : Futur projet -->
+    <section class="portal-section" id="section-future">
+      <div class="portal-wrapper">
+        <div class="portal portal--future" aria-disabled="true">
+          <div class="portal__ring portal__ring--outer"></div>
+          <div class="portal__ring portal__ring--mid"></div>
+          <div class="portal__core"></div>
+        </div>
+        <p class="portal-name portal-name--dim">? ? ? ? ? ? ? ? ?</p>
+        <span class="portal-badge badge--soon">À VENIR</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
