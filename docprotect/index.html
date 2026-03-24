@@ -346,9 +346,18 @@
       var isImage   = blob.type.startsWith('image/');
 
       if (thumbEl) {
-        thumbEl.innerHTML = isImage
-          ? '<img src="' + objectURL + '" alt="Document protégé" class="thumb-img" />'
-          : '<div class="pdf-preview">' + pdfIconHTML(44) + '<span class="pdf-preview__label">PDF protégé</span></div>';
+        if (isImage) {
+          // JPG/PNG : afficher directement l'image avec filigrane
+          thumbEl.innerHTML = '<img src="' + objectURL + '" alt="Document protégé" class="thumb-img" />';
+        } else {
+          // PDF : afficher la première page rendue comme aperçu canvas
+          thumbEl.innerHTML = '<div class="result-processing"><div class="spinner-ring"></div><span>Aperçu\u2026</span></div>';
+          renderPDFFirstPage(blob).then(function (dataURL) {
+            if (thumbEl) thumbEl.innerHTML = '<img src="' + dataURL + '" alt="Page 1 du PDF protégé" class="thumb-img" />';
+          }).catch(function () {
+            if (thumbEl) thumbEl.innerHTML = '<div class="pdf-preview">' + pdfIconHTML(44) + '<span class="pdf-preview__label">PDF protégé</span></div>';
+          });
+        }
       }
 
       if (statusEl) {
@@ -370,6 +379,19 @@
           '</svg> Télécharger';
         card.querySelector('.result-card__footer').appendChild(link);
       }
+    }
+
+    async function renderPDFFirstPage(blob) {
+      var arrayBuffer = await blob.arrayBuffer();
+      var pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      var page = await pdfDoc.getPage(1);
+      var viewport = page.getViewport({ scale: 0.5 });
+      var canvas = document.createElement('canvas');
+      canvas.width  = viewport.width;
+      canvas.height = viewport.height;
+      var ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+      return canvas.toDataURL('image/jpeg', 0.85);
     }
 
     function errorResultCard(id) {

@@ -126,11 +126,12 @@ async function _watermarkPDF(file, text) {
 }
 
 /* ============================================================
-   Core drawing — diagonal tiled watermark
+   Core drawing — single diagonal watermark line
    ============================================================ */
 
 /**
- * Draws a diagonal repeating watermark over a canvas context.
+ * Draws a single diagonal watermark centred on the canvas.
+ * Passes from bottom-left to top-right (-30°).
  * @param {CanvasRenderingContext2D} ctx
  * @param {number} width
  * @param {number} height
@@ -139,32 +140,16 @@ async function _watermarkPDF(file, text) {
 function _drawWatermark(ctx, width, height, text) {
   ctx.save();
 
-  // Font size scales with image width; clamped between 16px and 44px
-  var fontSize = Math.max(16, Math.min(Math.floor(width / 22), 44));
-  ctx.font = 'bold ' + fontSize + 'px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+  ctx.font            = 'bold 28px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+  ctx.globalAlpha     = 0.25;
+  ctx.fillStyle       = '#8b0000';
+  ctx.textAlign       = 'center';
+  ctx.textBaseline    = 'middle';
 
-  var textWidth = ctx.measureText(text).width;
-  var xSpacing  = textWidth + Math.round(fontSize * 2.5);
-  var ySpacing  = Math.round(fontSize * 4);
-
-  ctx.globalAlpha  = 0.35;
-  ctx.fillStyle    = '#8b0000';
-  ctx.textAlign    = 'left';
-  ctx.textBaseline = 'middle';
-
-  // Rotate around the canvas centre
-  var angle    = -Math.PI / 6;   // -30 degrees
-  var diagonal = Math.ceil(Math.sqrt(width * width + height * height));
-
+  // Translate to canvas centre, rotate -30°, draw once
   ctx.translate(width / 2, height / 2);
-  ctx.rotate(angle);
-
-  // Tile over the full rotated area
-  for (var y = -diagonal; y <= diagonal; y += ySpacing) {
-    for (var x = -diagonal; x <= diagonal; x += xSpacing) {
-      ctx.fillText(text, x, y);
-    }
-  }
+  ctx.rotate(-Math.PI / 6);
+  ctx.fillText(text, 0, 0);
 
   ctx.restore();
 }
