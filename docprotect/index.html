@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>docProtect — ETiC Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #03020d;
+      --teal: #1D9E75;
+      --teal-dark: #0F6E56;
+      --white: #f0eeff;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Stars */
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle var(--dur, 3s) ease-in-out var(--del, 0s) infinite;
+    }
+
+    /* Header */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2rem;
+      background: linear-gradient(to bottom, rgba(3,2,13,0.95) 0%, transparent 100%);
+    }
+
+    .logo { display: flex; flex-direction: column; gap: 0.15rem; line-height: 1; }
+
+    .logo-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+    }
+
+    .logo-sub {
+      font-size: 0.55rem;
+      font-weight: 300;
+      letter-spacing: 0.55em;
+      color: rgba(240,238,255,0.5);
+    }
+
+    /* Page */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 1.5rem 4rem;
+      gap: 2rem;
+    }
+
+    /* Mini trou noir */
+    .mini-portal {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      animation: floatY 5s ease-in-out infinite;
+    }
+
+    .mini-portal .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid transparent;
+    }
+
+    .mini-portal .ring--outer {
+      inset: -14px;
+      border-top-color: var(--teal);
+      border-right-color: var(--teal);
+      animation: spinCW 8s linear infinite;
+    }
+
+    .mini-portal .ring--mid {
+      inset: -6px;
+      border-bottom-color: var(--teal-dark);
+      border-left-color: var(--teal-dark);
+      animation: spinCCW 6s linear infinite;
+    }
+
+    .mini-portal .core {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, #0d3d2e 0%, #071f18 40%, #000 100%);
+      box-shadow:
+        0 0 25px rgba(29,158,117,0.5),
+        0 0 50px rgba(29,158,117,0.2),
+        inset 0 0 15px rgba(0,0,0,0.8);
+      animation: pulseGlowTeal 3s ease-in-out infinite;
+    }
+
+    /* Titre */
+    .page-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 8vw, 4rem);
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 30px rgba(29,158,117,0.4);
+    }
+
+    .page-subtitle {
+      font-size: clamp(0.75rem, 2vw, 0.95rem);
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      color: rgba(240,238,255,0.4);
+      text-transform: uppercase;
+    }
+
+    /* Bouton retour */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 1rem;
+      padding: 0.75rem 1.8rem;
+      border: 1px solid rgba(29,158,117,0.35);
+      border-radius: 999px;
+      color: var(--teal);
+      text-decoration: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    .back-btn:hover {
+      background: rgba(29,158,117,0.1);
+      border-color: var(--teal);
+      color: #fff;
+    }
+
+    /* Keyframes */
+    @keyframes spinCW  { from { transform: rotate(0deg);    } to { transform: rotate(360deg);  } }
+    @keyframes spinCCW { from { transform: rotate(0deg);    } to { transform: rotate(-360deg); } }
+    @keyframes floatY  {
+      0%, 100% { transform: translateY(0);     }
+      50%      { transform: translateY(-8px);  }
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--omin, 0.2); }
+      50%      { opacity: var(--omax, 1);   }
+    }
+    @keyframes pulseGlowTeal {
+      0%, 100% {
+        box-shadow:
+          0 0 20px rgba(29,158,117,0.4),
+          0 0 40px rgba(29,158,117,0.15),
+          inset 0 0 15px rgba(0,0,0,0.8);
+      }
+      50% {
+        box-shadow:
+          0 0 40px rgba(29,158,117,0.7),
+          0 0 80px rgba(29,158,117,0.3),
+          inset 0 0 15px rgba(0,0,0,0.8);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="stars"></div>
+
+  <header class="site-header">
+    <div class="logo">
+      <span class="logo-name">ETiC</span>
+      <span class="logo-sub">P O R T A L</span>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="mini-portal">
+      <div class="ring ring--outer"></div>
+      <div class="ring ring--mid"></div>
+      <div class="core"></div>
+    </div>
+
+    <h1 class="page-title">docProtect</h1>
+    <p class="page-subtitle">Projet en cours de développement</p>
+
+    <a class="back-btn" href="../index.html">&#8592; Retour au Portal</a>
+  </main>
+
+  <script>
+    (function () {
+      const container = document.getElementById('stars');
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < 120; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const size = (Math.random() * 2 + 0.5).toFixed(2);
+        s.style.cssText = `
+          width:${size}px; height:${size}px;
+          left:${Math.random()*100}%;
+          top:${Math.random()*100}%;
+          --omin:${(Math.random()*0.3+0.1).toFixed(2)};
+          --omax:${(Math.random()*0.5+0.5).toFixed(2)};
+          --dur:${(Math.random()*4+2).toFixed(2)}s;
+          --del:${(Math.random()*5).toFixed(2)}s;
+        `;
+        frag.appendChild(s);
+      }
+      container.appendChild(frag);
+    })();
+  </script>
+
+</body>
+</html>
